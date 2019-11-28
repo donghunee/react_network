@@ -116,12 +116,10 @@ App.js 에 state를 만들어 주겠습니다.
 class App extends React.Component {
 
     state = {
-        imageFile : "",  // input file 정보가 담기는 곳
-        titleValue : "", // input title 정보가 담기는 곳
-        contentValue : "", // input content 정보가 담기는 곳
-        title : "", // response 정보가 담기는 곳
-        content : "", // response 정보가 담기는 곳
-        imageURL : "", // S3 image URL 정보가 담기는 곳
+        image : "",  // input file 정보가 담기는 곳
+        title : "", // input title 정보가 담기는 곳
+        content : "", // input content 정보가 담기는 곳
+        result : "", // response 정보가 담기는 곳
     }
 
     render() {
@@ -143,12 +141,10 @@ export default App;
 class App extends React.Component {
 
     state = {
-        imageFile : "",  // input file 정보가 담기는 곳
-        titleValue : "", // input title 정보가 담기는 곳
-        contentValue : "", // input content 정보가 담기는 곳
-        title : "", // response 정보가 담기는 곳
-        content : "", // response 정보가 담기는 곳
-        imageURL : "", // S3 image URL 정보가 담기는 곳
+        image : "",  // input file 정보가 담기는 곳
+        title : "", // input title 정보가 담기는 곳
+        content : "", // input content 정보가 담기는 곳
+        result : "", // response 정보가 담기는 곳
     }
 
     _getFetch = () => {
@@ -166,7 +162,7 @@ class App extends React.Component {
           .then((response) =>{
             console.log(response) // 블라블라
               this.setState({
-                  data:response.data.reactMessage
+                  result : response.data.reactMessage
               })
           })
           .catch((err) => {
@@ -186,8 +182,9 @@ class App extends React.Component {
 export default App; 
 ```
 
+---
 
-## POST
+## POST - json data 업로드
 
 ```js
 // App.js
@@ -195,17 +192,40 @@ export default App;
 class App extends React.Component {
 
     state = {
-        imageFile : "",  // input file 정보가 담기는 곳
-        titleValue : "", // input title 정보가 담기는 곳
-        contentValue : "", // input content 정보가 담기는 곳
-        title : "", // response 정보가 담기는 곳
-        content : "", // response 정보가 담기는 곳
-        imageURL : "", // S3 image URL 정보가 담기는 곳
+        image : "",  // input file 정보가 담기는 곳
+        title : "", // input title 정보가 담기는 곳
+        content : "", // input content 정보가 담기는 곳
+        imageURL : "" // response 정보가 담기는 곳
     }
 
+    _postFetch = () => {
+        fetch(`http://`, {
+            method: "POST",
+            headers:{  
+              "Content-Type": "application/json;charset=UTF-8",
+              'Accept': 'application/json',
+              },
+            mode:"cors",
+            body: JSON.stringify({ // fetch 특징
+                title : this.state.title,
+                content : this.state.content,
+            }),
+          })
+          .then((response) => {
+             return response.json()
+            })
+          .then((response) =>{
+            console.log(response)
+            this.setState({
+                result : response.data.reactMessage
+            })
+          })
+          .catch((err) => {
+              console.log(err)
+          })
+    }
 
-
-    _handleSubmit = async (event) => {
+    _handleSubmit = (event) => {
         this._postFetch() 
         event.preventDefault(); // form 기능 막기
     }
@@ -221,7 +241,6 @@ class App extends React.Component {
             <div>
                 리액트 네트워크 시작!!
                 <button onClick={this._getFetch}>GET 하기</button> <br />
-
                 <form onSubmit={this.handleSubmit}>
                     <p>title</p>
                     <input type="text" name="title" value={this.state.title} onChange={this.handleChange} />
@@ -236,3 +255,105 @@ class App extends React.Component {
 export default App; 
 ```
 
+---
+
+## POST - 이미지 업로드
+
+```js
+// App.js
+
+class App extends React.Component {
+
+    state = {
+        imageFile : "",  // input file 정보가 담기는 곳
+        titleValue : "", // input title 정보가 담기는 곳
+        contentValue : "", // input content 정보가 담기는 곳
+        result : "" // response 정보가 담기는 곳
+    }
+
+    _postFetch = () => {
+        fetch(`http://`, {
+            method: "POST",
+            headers:{  
+              "Content-Type": "application/json;charset=UTF-8",
+              'Accept': 'application/json',
+              },
+            mode:"cors",
+            body: JSON.stringify({ // fetch 특징
+                title : this.state.titleValue,
+                content : this.state.contentValue,
+            }),
+          })
+          .then((response) => {
+             return response.json()
+            })
+          .then((response) =>{
+            console.log(response)
+            this.setState({
+                result : response.data.reactMessage
+            })
+          })
+          .catch((err) => {
+              console.log(err)
+          })
+    }
+
+    _postImageFetch = () => {
+        const data = new FormData()
+        data.append('image',this.state.image)
+        data.append('title',this.state.title)
+        data.append('content',this.state.content)
+
+        fetch(`http://`, {
+            method: "POST",
+            // headers:{  
+            //     "Content-Type": "multipart/form-data",
+            //     },
+            body: data,
+            })
+            .then(response => response.json())
+            .then(response => {
+               console.log(response)
+               this.setState({imageURL:response.data.result.images})
+            })
+    }
+
+    _handleSubmit = (event) => {
+        // this._postFetch()
+        this._postImageFetch() 
+        event.preventDefault(); // form 기능 막기
+    }
+
+    _handleChange = (event) => {
+        const { target: { name, value } } = event // 비구조화 할당
+        if (name == 'image') {
+            this.setState({[name]: event.target.files[0]});
+        }else {
+            this.setState({[name] : value}) // dynamic key
+            console.log(this.state.value)
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                리액트 네트워크 시작!!
+                <button onClick={this._getFetch}>GET 하기</button> <br />
+                <form onSubmit={this.handleSubmit}>
+                    <p>image</p>
+                    <input name="image" type="file" onChange={this.imageChange} />
+                    <p>title</p>
+                    <input type="text" name="title" value={this.state.titleValue} onChange={this.handleChange} />
+                    <p>content</p>
+                    <input type="text" name="content" value={this.state.contentValue} onChange={this.handleChange} />
+                    <input type="submit" value="POST 하기" />
+                </form>
+                { this.state.imageURL.length > 0 && <img src={this.state.imageURL} /> }
+            </div>
+        )
+    }
+
+export default App; 
+```
+
+axios는 각자 해보는거로~

@@ -99,8 +99,15 @@ class App extends React.Component {
 
     handleChange = (event) => {
         const { target: { name, value } } = event // 비구조화 할당
-        this.setState({[name] : value}); // dynamic key 
-        console.log(this.state)
+        console.log(name)
+        console.log(value)
+        if (name === 'image') {
+            this.setState({[name]: event.target.files[0]});
+            console.log(this.state)
+        }else {
+            this.setState({[name] : value}) // dynamic key
+            console.log(this.state)
+        }
     }
 
     render() {
@@ -108,14 +115,13 @@ class App extends React.Component {
             <div>
                 <button onClick={this._network}>요요</button>
                 <form onSubmit={this.handleSubmit}>
-                    <label>
-                    Name:
-                    <input type="file" onChange={this.imageChange} />
-                    <input type="text" name="title" value={this.state.title} onChange={this.handleChange} />
-                    <input type="text" name="content" value={this.state.content} onChange={this.handleChange} />
-                    
-                    </label>
-                    <input type="submit" value="Submit" />
+                    <p>image</p>
+                    <input name="image" type="file" onChange={this.handleChange} />
+                    <p>title</p>
+                    <input type="text" name="title" value={this.state.titleValue} onChange={this.handleChange} />
+                    <p>content</p>
+                    <input type="text" name="content" value={this.state.contentValue} onChange={this.handleChange} />
+                    <input type="submit" value="POST 하기" />
                 </form>
                 <div>
                     {this.state.data}
