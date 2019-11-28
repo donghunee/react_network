@@ -1,68 +1,238 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# React 네트워크
 
-## Available Scripts
+시작!!
 
-In the project directory, you can run:
+```
+create-react-app react-network
+```
 
-### `yarn start`
+state를 쓸 예정이기때문에 App.js 를 class componet로 바꿔줄게요!!  
+오늘은 App.js만 수정하고 다룰 예정입니다.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```javascript
+// App.js
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+class App extends React.Component {
 
-### `yarn test`
+    render() {
+        return (
+            <div>
+                리액트 네트워크 시작!!
+            </div>
+        )
+    }
+export default App; 
+```
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+이제 사전 준비는 끝났습니다.
 
-### `yarn build`
+---
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+이제 네트워크 통신을 위한 라이브러리에 대해서 알아보겠습니다. react와 react-native에서 쓰이는 대표적인 통신 라이브러리로는 fetch와 axios가 있는데요 둘다 어떤 특징이 있는지 알아보겠습니다.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+# Axios
+- 사용하기 더 편하다 (fetch도 물론 편하다)
+- fetch에서 지원하지 않는 기능들을 지원해준다.
+- Promise base
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Fetch
+- import 하지않고 쓸 수 있다.
+- React Native의 경우 업데이트가 잦아서, 라이브러리가 업데이트를 쫒아오지 못하는 경우가 생기는데, Fetch의 경우 이런 걱정 필요 없음.
+- Promise base
+- 네트워크 에러가 발생했을 때, 기다려야 함.. > response timeout API 제공 x
+- 지원하지 않는 브라우저가 있음. (ES6를 지원하지 않는 브라우저의 경우..)
 
-### `yarn eject`
+만약 서버로 POST 요청을 한다고 가정하였을 때 fetch와 axios가 어떤 차이가 있는지 알아보겠습니다.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Fetch - POST
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```javascript
+let url = 'https://someurl.com';
+let options = {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify({
+                property_one: value_one,
+                property_two: value_two
+            })
+        };
+let response = await fetch(url, options);  // Promise base 
+let responseOK = response && response.ok;
+if (responseOK) {
+    let data = await response.json();
+    // 블라 블라
+}
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Fetch - POST
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```javascript
+let url = 'https://someurl.com';
+let options = {
+            method: 'POST',
+            url: url,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            data: {
+                property_one: value_one,
+                property_two: value_two
+            }
+        };
+let response = await axios(options); // Promise base 
+let responseOK = response && response.status === 200 && response.statusText === 'OK';
+if (responseOK) {
+    let data = await response.data;
+    // 블라블라
+}
+```
 
-## Learn More
+## 결론  
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+> 사용자의 입맛에 따라 고르면 될것 같다. 간단한 경우엔 fetch를 쓰고 좀더 기능이 필요할땐 axios를 쓰는것도 방법.
+React-Native의 경우엔 업데이트가 너무 빠르기 때문에 fetch를 쓰는게 좋아보인다. 결론은 입맛에 따라 고르자!!
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+# React에서 실습
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+자 이제 통신 실습을 진행해보겠습니다.
 
-### Analyzing the Bundle Size
+서버는 미리 만들어 놓았습니다. API 명세서는 다음 링크에서 확인해주세요~!!
+// 블라블라
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+## GET 
 
-### Making a Progressive Web App
+App.js 에 state를 만들어 주겠습니다.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+```javascript
+// App.js
 
-### Advanced Configuration
+class App extends React.Component {
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+    state = {
+        imageFile : "",  // input file 정보가 담기는 곳
+        titleValue : "", // input title 정보가 담기는 곳
+        contentValue : "", // input content 정보가 담기는 곳
+        title : "", // response 정보가 담기는 곳
+        content : "", // response 정보가 담기는 곳
+        imageURL : "", // S3 image URL 정보가 담기는 곳
+    }
 
-### Deployment
+    render() {
+        return (
+            <div>
+                리액트 네트워크 시작!!
+            </div>
+        )
+    }
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+export default App; 
+```
 
-### `yarn build` fails to minify
+## GET
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+```javascript
+// App.js
+
+class App extends React.Component {
+
+    state = {
+        imageFile : "",  // input file 정보가 담기는 곳
+        titleValue : "", // input title 정보가 담기는 곳
+        contentValue : "", // input content 정보가 담기는 곳
+        title : "", // response 정보가 담기는 곳
+        content : "", // response 정보가 담기는 곳
+        imageURL : "", // S3 image URL 정보가 담기는 곳
+    }
+
+    _getFetch = () => {
+        fetch(`https://`, {
+            method: "GET",
+            headers:{  
+              "Content-Type": "application/json;charset=UTF-8",
+              'Accept': 'application/json',
+              },
+            mode:"cors", // CORS (cross-origin)
+          })
+          .then((response) => {
+             return response.json() // response json parse 하기
+            })
+          .then((response) =>{
+            console.log(response) // 블라블라
+              this.setState({
+                  data:response.data.reactMessage
+              })
+          })
+          .catch((err) => {
+              console.log(err)
+          })
+    }
+
+    render() {
+        return (
+            <div>
+                리액트 네트워크 시작!!
+                <button onClick={this._getFetch}>GET 하기</button> 
+            </div>
+        )
+    }
+
+export default App; 
+```
+
+
+## POST
+
+```js
+// App.js
+
+class App extends React.Component {
+
+    state = {
+        imageFile : "",  // input file 정보가 담기는 곳
+        titleValue : "", // input title 정보가 담기는 곳
+        contentValue : "", // input content 정보가 담기는 곳
+        title : "", // response 정보가 담기는 곳
+        content : "", // response 정보가 담기는 곳
+        imageURL : "", // S3 image URL 정보가 담기는 곳
+    }
+
+
+
+    _handleSubmit = async (event) => {
+        this._postFetch() 
+        event.preventDefault(); // form 기능 막기
+    }
+
+    _handleChange = (event) => {
+        const { target: { name, value } } = event // 비구조화 할당
+        this.setState({[name] : value}) // dynamic key
+        console.log(this.state.value)
+    }
+
+    render() {
+        return (
+            <div>
+                리액트 네트워크 시작!!
+                <button onClick={this._getFetch}>GET 하기</button> <br />
+
+                <form onSubmit={this.handleSubmit}>
+                    <p>title</p>
+                    <input type="text" name="title" value={this.state.title} onChange={this.handleChange} />
+                    <p>content</p>
+                    <input type="text" name="content" value={this.state.content} onChange={this.handleChange} />
+                    <input type="submit" value="POST 하기" />
+                </form>
+            </div>
+        )
+    }
+
+export default App; 
+```
+
