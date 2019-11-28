@@ -103,8 +103,8 @@ React-Native의 경우엔 업데이트가 너무 빠르기 때문에 fetch를 �
 
 자 이제 통신 실습을 진행해보겠습니다.
 
-서버는 미리 만들어 놓았습니다. API 명세서는 다음 링크에서 확인해주세요~!!
-// 블라블라
+서버는 미리 만들어 놓았습니다. API 명세서는 다음 링크에서 확인해주세요~!!  
+https://github.com/donghunee/react_study_server
 
 ## GET 
 
