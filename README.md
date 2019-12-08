@@ -305,7 +305,7 @@ class App extends React.Component {
         data.append('title',this.state.title)
         data.append('content',this.state.content)
 
-        fetch(`https://github.com/donghunee/react_study_server`, {
+        fetch(`https://reactservermo.herokuapp.com/image`, {
             method: "POST",
             // headers:{  
             //     "Content-Type": "multipart/form-data",
