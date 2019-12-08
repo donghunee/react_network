@@ -69,7 +69,7 @@ if (responseOK) {
 }
 ```
 
-## Fetch - POST
+## Axios - POST
 
 ```javascript
 let url = 'https://someurl.com';
@@ -130,7 +130,7 @@ class App extends React.Component {
             </div>
         )
     }
-
+}
 export default App; 
 ```
 
@@ -149,7 +149,7 @@ class App extends React.Component {
     }
 
     _getFetch = () => {
-        fetch(`https://`, {
+        fetch(`https://reactservermo.herokuapp.com/`, {
             method: "GET",
             headers:{  
               "Content-Type": "application/json;charset=UTF-8",
@@ -200,7 +200,7 @@ class App extends React.Component {
     }
 
     _postFetch = () => {
-        fetch(`http://`, {
+        fetch(https://reactservermo.herokuapp.com/`, {
             method: "POST",
             headers:{  
               "Content-Type": "application/json;charset=UTF-8",
@@ -273,7 +273,7 @@ class App extends React.Component {
     }
 
     _postFetch = () => {
-        fetch(`http://`, {
+        fetch(`https://reactservermo.herokuapp.com/image`, {
             method: "POST",
             headers:{  
               "Content-Type": "application/json;charset=UTF-8",
