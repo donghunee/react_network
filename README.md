@@ -21,6 +21,7 @@ class App extends React.Component {
             </div>
         )
     }
+}
 export default App; 
 ```
 
@@ -119,7 +120,7 @@ class App extends React.Component {
         image : "",  // input file 정보가 담기는 곳
         title : "", // input title 정보가 담기는 곳
         content : "", // input content 정보가 담기는 곳
-        result : "", // response 정보가 담기는 곳
+        imageURL : "", // response 정보가 담기는 곳
     }
 
     render() {
@@ -144,7 +145,7 @@ class App extends React.Component {
         image : "",  // input file 정보가 담기는 곳
         title : "", // input title 정보가 담기는 곳
         content : "", // input content 정보가 담기는 곳
-        result : "", // response 정보가 담기는 곳
+        imageURL : "" // response 정보가 담기는 곳
     }
 
     _getFetch = () => {
@@ -241,11 +242,11 @@ class App extends React.Component {
             <div>
                 리액트 네트워크 시작!!
                 <button onClick={this._getFetch}>GET 하기</button> <br />
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this._handleSubmit}>
                     <p>title</p>
-                    <input type="text" name="title" value={this.state.title} onChange={this.handleChange} />
+                    <input type="text" name="title" value={this.state.title} onChange={this._handleChange} />
                     <p>content</p>
-                    <input type="text" name="content" value={this.state.content} onChange={this.handleChange} />
+                    <input type="text" name="content" value={this.state.content} onChange={this._handleChange} />
                     <input type="submit" value="POST 하기" />
                 </form>
             </div>
@@ -265,10 +266,10 @@ export default App;
 class App extends React.Component {
 
     state = {
-        imageFile : "",  // input file 정보가 담기는 곳
-        titleValue : "", // input title 정보가 담기는 곳
-        contentValue : "", // input content 정보가 담기는 곳
-        result : "" // response 정보가 담기는 곳
+        image : "",  // input file 정보가 담기는 곳
+        title : "", // input title 정보가 담기는 곳
+        content : "", // input content 정보가 담기는 곳
+        imageURL : "" // response 정보가 담기는 곳
     }
 
     _postFetch = () => {
@@ -339,13 +340,13 @@ class App extends React.Component {
             <div>
                 리액트 네트워크 시작!!
                 <button onClick={this._getFetch}>GET 하기</button> <br />
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this._handleSubmit}>
                     <p>image</p>
-                    <input name="image" type="file" onChange={this.imageChange} />
+                    <input name="image" type="file" onChange={this._handleChange} />
                     <p>title</p>
-                    <input type="text" name="title" value={this.state.titleValue} onChange={this.handleChange} />
+                    <input type="text" name="title" value={this.state.title} onChange={this._handleChange} />
                     <p>content</p>
-                    <input type="text" name="content" value={this.state.contentValue} onChange={this.handleChange} />
+                    <input type="text" name="content" value={this.state.content} onChange={this._handleChange} />
                     <input type="submit" value="POST 하기" />
                 </form>
                 { this.state.imageURL.length > 0 && <img src={this.state.imageURL} /> }
